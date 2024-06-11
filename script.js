@@ -64,42 +64,39 @@ function draw(){
 };
 
 function changeY(y) {
-    const newHead = { x: snake[0].x, y: (snake[0].y += y) };
+    const newHead = { x: snake[0].x, y: snake[0].y + y };
     snake.unshift(newHead);
     snake.pop();
 }
 
 function changeX(x) {
-    const newHead = { x: (snake[0].x += x), y: snake[0].y };
+    const newHead = { x: snake[0].x + x, y: snake[0].y };
     snake.unshift(newHead);
     snake.pop();
 }
-  
-function moveSnake(){
+
+function moveSnake() {
     if (direction && direction !== lastDirection) {
         lastDirection = direction;
     }
 
-    switch (lastDirection){
+    switch (lastDirection) {
         case "up":
-            changeY(-WidthSquare)
+            changeY(-WidthSquare);
             break;
         case "down":
-            changeY(WidthSquare)
+            changeY(WidthSquare);
             break;
-
         case "right":
-            changeX(HeigthSquare)
+            changeX(HeigthSquare);
             break;
-
         case "left":
-            changeX(-HeigthSquare)
+            changeX(-HeigthSquare);
             break;
-
         default:
             break;
-        }
-};
+    }
+}
 
 document.addEventListener("keydown", (e) =>{
     switch (e.key){
@@ -130,10 +127,9 @@ document.addEventListener("keydown", (e) =>{
     }
 });
 
-setInterval(game, 100);
-
 function game(){
     moveSnake();
+    draw();
 };
 
-draw();
+setInterval(game, 100);
