@@ -23,6 +23,12 @@ let direction = "";
 let lastDirection = "";
 
 //Apple 
+
+const applePosition = {
+    x: Math.floor(Math.random() * division) * WidthSquare,
+    y: Math.floor(Math.random() * division) * HeigthSquare
+};
+
 const apple = document.createElement('img');
 apple.src = 'assets/apple.png';
 
@@ -59,6 +65,7 @@ function draw(){
     ctx.fillRect(0, 0, canvas.width, canvas.height); 
     drawGrades();
     drawSnake();
+    ctx.drawImage(apple, applePosition.x, applePosition.y);
 
     requestAnimationFrame(draw);
 };
@@ -127,9 +134,28 @@ document.addEventListener("keydown", (e) =>{
     }
 });
 
-function game(){
+// função para impedir a cobra de sair do campo
+function hit() {
+    for (let i = 0; i < snake.length; i++) {
+      if (snake[i].x > canvas.width - WidthSquare) {
+        snake[i].x = 0;
+      }
+      if (snake[i].x < 0) {
+        snake[i].x = canvas.width;
+      }
+      if (snake[i].y > canvas.height - HeigthSquare) {
+        snake[i].y = 0;
+      }
+      if (snake[i].y < 0) {
+        snake[i].y = canvas.height;
+      }
+    }
+}
+
+function gameLoop() {
     moveSnake();
+    hit(); 
     draw();
 };
 
-setInterval(game, 100);
+const gameInterval = setInterval(gameLoop, 100);
