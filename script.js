@@ -152,9 +152,60 @@ function hit() {
     }
 }
 
+function changeFruitPosition() {
+    const max = division - 1;
+    applePosition.x = Math.floor(Math.random() * max) * WidthSquare;
+    applePosition.y = Math.floor(Math.random() * max) * HeigthSquare;
+  
+    for (let i = 0; i < snake.length; i++) {
+      if (snake[i].x == applePosition.x && snake[i].y == applePosition.y) {
+        changeFruitPosition();
+      }
+    }
+}
+
+function eat() {
+    if (snake[0].x == applePosition.x && snake[0].y == applePosition.y) {
+      switch (direction) {
+        case "up":
+          snake.push({
+            y: snake[snake.length - 1].y,
+            x: snake[snake.length - 1].x,
+          });
+          break;
+  
+        case "down":
+          snake.push({
+            y: snake[snake.length - 1].y,
+            x: snake[snake.length - 1].x,
+          });
+          break;
+  
+        case "left":
+          snake.push({
+            x: snake[snake.length - 1].x,
+            y: snake[snake.length - 1].y,
+          });
+          break;
+  
+        case "right":
+          snake.push({
+            x: snake[snake.length - 1].x,
+            y: snake[snake.length - 1].y,
+          });
+          break;
+  
+        default:
+          break;
+      }
+      changeFruitPosition();
+    }
+  }
+
 function gameLoop() {
     moveSnake();
     hit(); 
+    eat();
     draw();
 };
 
