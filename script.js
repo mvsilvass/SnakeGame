@@ -1,6 +1,8 @@
 const canvas = document.getElementById("game");
 const ctx = canvas.getContext("2d");
 
+let gameOver = false;
+
 //GRADES
 const division = 20;
 const WidthSquare = canvas.width / division;
@@ -61,13 +63,22 @@ function drawRoundedSquare(x, y) {
 };
 
 function draw(){
-    ctx.fillStyle = "#F6ECF4";
-    ctx.fillRect(0, 0, canvas.width, canvas.height); 
-    drawGrades();
-    drawSnake();
-    ctx.drawImage(apple, applePosition.x, applePosition.y);
+  ctx.fillStyle = "#F6ECF4";
+  ctx.fillRect(0, 0, canvas.width, canvas.height); 
+  drawGrades();
+  drawSnake();
+  ctx.drawImage(apple, applePosition.x, applePosition.y);
 
-    requestAnimationFrame(draw);
+  if (gameOver) {
+    ctx.fillStyle = "black";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = "white";
+    ctx.font = "50px Arial";
+    ctx.textAlign = "center";
+    ctx.fillText("Game Over", canvas.width / 2, canvas.height / 2);
+    }
+
+  requestAnimationFrame(draw);
 };
 
 function changeY(y) {
@@ -134,22 +145,13 @@ document.addEventListener("keydown", (e) =>{
     }
 });
 
-// função para impedir a cobra de sair do campo
-function hit() {
-    for (let i = 0; i < snake.length; i++) {
-      if (snake[i].x > canvas.width - WidthSquare) {
-        snake[i].x = 0;
-      }
-      if (snake[i].x < 0) {
-        snake[i].x = canvas.width;
-      }
-      if (snake[i].y > canvas.height - HeigthSquare) {
-        snake[i].y = 0;
-      }
-      if (snake[i].y < 0) {
-        snake[i].y = canvas.height;
-      }
+function checkCollision() {
+  for(i = 1; i < snake.length; i++){
+    if(snake[0].x == snake[i].x && snake[0].y == snake[i].y){
+        clearInterval(gameInterval);
+        gameOver = true;
     }
+  }
 }
 
 function changeFruitPosition() {
@@ -203,10 +205,13 @@ function eat() {
   }
 
 function gameLoop() {
+  if (!gameOver) {
     moveSnake();
-    hit(); 
+    checkCollision(); 
     eat();
     draw();
+  }
 };
 
 const gameInterval = setInterval(gameLoop, 100);
+draw();
