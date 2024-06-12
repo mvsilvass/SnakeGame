@@ -3,6 +3,10 @@ const ctx = canvas.getContext("2d");
 
 let gameOver = false;
 
+//ICON
+const restart = document.createElement('img');
+restart.src = 'assets/restart.png';
+
 //GRADES
 const division = 20;
 const WidthSquare = canvas.width / division;
@@ -25,7 +29,6 @@ let direction = "";
 let lastDirection = "";
 
 //Apple 
-
 const applePosition = {
     x: Math.floor(Math.random() * division) * WidthSquare,
     y: Math.floor(Math.random() * division) * HeigthSquare
@@ -34,16 +37,8 @@ const applePosition = {
 const apple = document.createElement('img');
 apple.src = 'assets/apple.png';
 
-function drawGrades(){
-    ctx.fillStyle = "#aaa";
-    for (let i = 1; i < division; i++){
-        ctx.fillRect(0, i * WidthSquare, canvas.width, 0.8);
-        ctx.fillRect(i * HeigthSquare, 0, 0.8, canvas.height);
-    }
-};
-
 function drawSnake(){
-    ctx.fillStyle = "#15750e";
+    ctx.fillStyle = "#561f5c";
     for (let i = 0; i < snake.length; i++) {
         const { x, y } = snake[i];
         drawRoundedSquare(x, y);
@@ -63,21 +58,27 @@ function drawRoundedSquare(x, y) {
 };
 
 function draw(){
-  ctx.fillStyle = "#F6ECF4";
-  ctx.fillRect(0, 0, canvas.width, canvas.height); 
-  drawGrades();
+  ctx.fillStyle = "#b784bd";
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
   drawSnake();
   ctx.drawImage(apple, applePosition.x, applePosition.y);
 
   if (gameOver) {
-    ctx.fillStyle = "black";
+    ctx.fillStyle = "#561f5c";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
-    ctx.fillStyle = "white";
-    ctx.font = "50px Arial";
+    ctx.fillStyle = "black";
+    ctx.font = "bold 50px Arial";
     ctx.textAlign = "center";
-    ctx.fillText("Game Over", canvas.width / 2, canvas.height / 2);
-    }
-
+    ctx.fillText("Game Over!", canvas.width / 2, canvas.height / 2);  
+    
+    const restartButton = document.getElementById("restartButton");
+    restartButton.style.display = "block";
+    restartButton.style.left = `${canvas.offsetLeft + canvas.width / 2 - 30}px`;
+    restartButton.style.top = `${canvas.offsetTop + canvas.height / 2 + 40}px`; 
+  } else {
+    const restartButton = document.getElementById("restartButton");
+    restartButton.style.display = "none";
+  }
   requestAnimationFrame(draw);
 };
 
@@ -144,6 +145,11 @@ document.addEventListener("keydown", (e) =>{
             break;
     }
 });
+ 
+restartButton.addEventListener('click', () => {
+  location.reload(); 
+});
+
 
 function checkCollision() {
   for(i = 1; i < snake.length; i++){

@@ -11,5 +11,11 @@ body {
 }
 
 canvas{
-    border: #aaa 1px solid;
+    border: #561f5c 2px solid;
+}
+
+.end-game-button {
+    position: absolute;
+    cursor: pointer;
+    display: none;
 }
