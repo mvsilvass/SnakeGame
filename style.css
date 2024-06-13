@@ -14,7 +14,7 @@ canvas{
     border: #561f5c 2px solid;
 }
 
-.end-game-button {
+.restartButton {
     position: absolute;
     cursor: pointer;
     display: none;

@@ -2,10 +2,7 @@ const canvas = document.getElementById("game");
 const ctx = canvas.getContext("2d");
 
 let gameOver = false;
-
-//ICON
-const restart = document.createElement('img');
-restart.src = 'assets/restart.png';
+let gameStarted = false;
 
 //GRADES
 const division = 20;
@@ -58,16 +55,25 @@ function drawRoundedSquare(x, y) {
 };
 
 function draw(){
-  ctx.fillStyle = "#b784bd";
+  ctx.fillStyle = "#BE78C8";
   ctx.fillRect(0, 0, canvas.width, canvas.height);
-  drawSnake();
-  ctx.drawImage(apple, applePosition.x, applePosition.y);
 
+  if (!gameStarted) {
+    ctx.fillStyle = "#BE78C8";
+    ctx.fillStyle = "black";
+    ctx.font = "bold 45px Arial";
+    ctx.textAlign = "center";
+    ctx.fillText("Press Arrow Keys to Play", canvas.width / 2, canvas.height / 2);
+    ctx.fillText(" ⬅ ⬆ ⬇ ⮕", canvas.width / 2, canvas.height / 2+50);
+} else {
+    drawSnake();
+    ctx.drawImage(apple, applePosition.x, applePosition.y);
+}
   if (gameOver) {
-    ctx.fillStyle = "#561f5c";
+    ctx.fillStyle = "#BE78C8";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
     ctx.fillStyle = "black";
-    ctx.font = "bold 50px Arial";
+    ctx.font = "bold 80px Arial";
     ctx.textAlign = "center";
     ctx.fillText("Game Over!", canvas.width / 2, canvas.height / 2);  
     
@@ -144,12 +150,16 @@ document.addEventListener("keydown", (e) =>{
         default:
             break;
     }
+
+    if (!gameStarted && ["ArrowUp", "ArrowDown", "ArrowRight", "ArrowLeft"].includes(e.key)) {
+      gameStarted = true;
+  }
+
 });
  
 restartButton.addEventListener('click', () => {
   location.reload(); 
 });
-
 
 function checkCollision() {
   for(i = 1; i < snake.length; i++){
@@ -167,19 +177,19 @@ function checkCollision() {
 ) {
     gameOver = true;
     clearInterval(gameInterval);
-}
+  }
 }
 
 function changeFruitPosition() {
-    const max = division - 1;
-    applePosition.x = Math.floor(Math.random() * max) * WidthSquare;
-    applePosition.y = Math.floor(Math.random() * max) * HeigthSquare;
+  const max = division - 1;
+  applePosition.x = Math.floor(Math.random() * max) * WidthSquare;
+  applePosition.y = Math.floor(Math.random() * max) * HeigthSquare;
   
-    for (let i = 0; i < snake.length; i++) {
-      if (snake[i].x == applePosition.x && snake[i].y == applePosition.y) {
-        changeFruitPosition();
-      }
+  for (let i = 0; i < snake.length; i++) {
+    if (snake[i].x == applePosition.x && snake[i].y == applePosition.y) {
+      changeFruitPosition();
     }
+  }
 }
 
 function eat() {
