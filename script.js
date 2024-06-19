@@ -4,6 +4,12 @@ const ctx = canvas.getContext("2d");
 let gameOver = false;
 let gameStarted = false;
 
+const collisionSound = new Audio('assets/sounds/collision.mp3');
+const snakeEatSound = new Audio('assets/sounds/snakeEat.wav');
+
+collisionSound.volume = 1;
+snakeEatSound.volume = 1;
+
 //GRADES
 const division = 20;
 const WidthSquare = canvas.width / division;
@@ -64,7 +70,6 @@ function draw(){
     ctx.font = "bold 45px Arial";
     ctx.textAlign = "center";
     ctx.fillText("Press Arrow Keys to Play", canvas.width / 2, canvas.height / 2);
-    ctx.fillText(" ⬅ ⬆ ⬇ ⮕", canvas.width / 2, canvas.height / 2+50);
 } else {
     drawSnake();
     ctx.drawImage(apple, applePosition.x, applePosition.y);
@@ -166,6 +171,7 @@ function checkCollision() {
     if(snake[0].x == snake[i].x && snake[0].y == snake[i].y){
         clearInterval(gameInterval);
         gameOver = true;
+        collisionSound.play(); 
     }
   }
 
@@ -177,6 +183,7 @@ function checkCollision() {
 ) {
     gameOver = true;
     clearInterval(gameInterval);
+    collisionSound.play(); 
   }
 }
 
@@ -194,6 +201,7 @@ function changeFruitPosition() {
 
 function eat() {
     if (snake[0].x == applePosition.x && snake[0].y == applePosition.y) {
+      snakeEatSound.play();
       switch (direction) {
         case "up":
           snake.push({
