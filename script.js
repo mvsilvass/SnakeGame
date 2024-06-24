@@ -44,21 +44,13 @@ function drawSnake(){
     ctx.fillStyle = "#561f5c";
     for (let i = 0; i < snake.length; i++) {
         const { x, y } = snake[i];
-        drawRoundedSquare(x, y);
+        drawSquare(x, y);
     }
 };
 
-function drawRoundedSquare(x, y) {
-    const cornerRadius = 10; 
-    ctx.beginPath();
-    ctx.moveTo(x + cornerRadius, y);
-    ctx.arcTo(x + WidthSquare, y, x + WidthSquare, y + HeigthSquare, cornerRadius);
-    ctx.arcTo(x + WidthSquare, y + HeigthSquare, x, y + HeigthSquare, cornerRadius);
-    ctx.arcTo(x, y + HeigthSquare, x, y, cornerRadius);
-    ctx.arcTo(x, y, x + WidthSquare, y, cornerRadius);
-    ctx.closePath();
-    ctx.fill();
-};
+function drawSquare(x, y) {
+  ctx.fillRect(x, y, WidthSquare, HeigthSquare);
+}
 
 function draw(){
   ctx.fillStyle = "#BE78C8";
@@ -90,7 +82,6 @@ function draw(){
     const restartButton = document.getElementById("restartButton");
     restartButton.style.display = "none";
   }
-  requestAnimationFrame(draw);
 };
 
 function changeY(y) {
@@ -169,7 +160,6 @@ restartButton.addEventListener('click', () => {
 function checkCollision() {
   for(i = 1; i < snake.length; i++){
     if(snake[0].x == snake[i].x && snake[0].y == snake[i].y){
-        clearInterval(gameInterval);
         gameOver = true;
         collisionSound.play(); 
     }
@@ -182,7 +172,6 @@ function checkCollision() {
     snake[0].y >= canvas.height
 ) {
     gameOver = true;
-    clearInterval(gameInterval);
     collisionSound.play(); 
   }
 }
@@ -238,14 +227,30 @@ function eat() {
     }
   }
 
-function gameLoop() {
-  if (!gameOver) {
+let lastTime = 0;
+const fps = 10; // desired fps
+const fpsInterval = 1000 / fps;
+
+function gameLoop(timestamp) {
+  if (!gameStarted || gameOver) {
+    draw();
+    requestAnimationFrame(gameLoop);
+    return;
+  }
+
+  const elapsed = timestamp - lastTime;
+
+  if (elapsed > fpsInterval) {
+    lastTime = timestamp - (elapsed % fpsInterval);
+
     moveSnake();
     checkCollision(); 
     eat();
     draw();
   }
+
+  requestAnimationFrame(gameLoop);
 };
 
-const gameInterval = setInterval(gameLoop, 100);
+requestAnimationFrame(gameLoop);
 draw();
