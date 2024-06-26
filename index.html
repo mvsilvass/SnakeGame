@@ -8,8 +8,15 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body> 
-    <canvas height="600" width="600" id="game"></canvas>
-    <img id="restartButton" class="restartButton" src="assets/restart.png" alt="Restart">
+    <div class="container">
+        <div id="scoreContainer" class="scoreContainer">
+            <img src="assets/apple.png">
+            <p id="scoreText">0</p>
+        </div>
+        <canvas height="600" width="600" id="game"></canvas> 
+        <img id="restartButton" class="restartButton" src="assets/restart.png" alt="Restart">
+    </div>
+
     <script src="script.js"></script>
 </body>
 </html>
